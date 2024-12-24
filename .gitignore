@@ -1,0 +1,8 @@
+/target
+/json
+/*.sh
+.env
+.vscode
+.idea
+
+/*.pem
