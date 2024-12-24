@@ -16,3 +16,9 @@ serde_json = { version = "1.0.134", features = ["raw_value"] }
 sqlx = { version = "0.8.2", features = ["postgres", "runtime-tokio-native-tls", "derive", "json", "uuid"] }
 tokio = { version = "1.42.0", features = ["full"] }
 uuid = { version = "1.11.0", features = ["serde"] }
+
+[profile.dev]
+opt-level = 1
+
+[profile.release]
+opt-level = 3
