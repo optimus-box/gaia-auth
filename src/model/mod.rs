@@ -4,4 +4,4 @@ mod user;
 
 pub use group::{Group, GroupDto};
 pub use security::{LoginDto, PasswordDto};
-pub use user::{User, UserCreateDto, UserUpdateDto, UserWithGroups};
+pub use user::{ProfileDto, User, UserCreateDto, UserUpdateDto, UserWithGroups};

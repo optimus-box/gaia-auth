@@ -1,0 +1,7 @@
+/target
+.env
+.env.example
+/json
+.vscode
+api-test.sh
+Makefile

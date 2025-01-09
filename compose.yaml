@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+  auth:
+    build: .
+    container_name: gaia-auth
+    ports:
+      - 4000:4000
+    environment:
+      - HTTP_PORT=4000
+      - HTTP_HOST=0.0.0.0
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=postgres
+      - PASSWORD_SALT=816bfb5ca97ba33ef2cdd33763624bd34cd3b0d16aba0f94a6228481b009b0b3
+      - JWT_PRIVATE_KEY=/var/run/secrets/private.pem
+      - JWT_PUBLIC_KEY=/var/run/secrets/public.pem
+    volumes:
+      - ./private.pem:/var/run/secrets/private.pem
+      - ./public.pem:/var/run/secrets/public.pem

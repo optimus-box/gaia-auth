@@ -57,3 +57,10 @@ pub struct UserUpdateDto {
     pub locked: bool,
     pub groups: Vec<Uuid>,
 }
+
+#[derive(Debug, Deserialize)]
+pub struct ProfileDto {
+    pub name: String,
+    pub phone: Option<String>,
+    pub role: Option<String>,
+}

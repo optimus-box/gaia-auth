@@ -1,7 +1,9 @@
-use sqlx::{query, query_as, Pool, Postgres};
+use sqlx::{query, query_as, query_scalar, Pool, Postgres};
 use uuid::Uuid;
 
-use crate::model::{Group, PasswordDto, User, UserCreateDto, UserUpdateDto, UserWithGroups};
+use crate::model::{
+    Group, PasswordDto, ProfileDto, User, UserCreateDto, UserUpdateDto, UserWithGroups,
+};
 
 #[derive(Clone)]
 pub struct UserRepository {
@@ -148,5 +150,28 @@ impl UserRepository {
             .execute(self.db())
             .await?;
         Ok(())
+    }
+
+    pub async fn update_profile(&self, id: Uuid, dto: ProfileDto) -> Result<User, sqlx::Error> {
+        let sql = r#"update users set name = $2, phone = $3, role = $4, updated_at = extract(epoch from now()) where id = $1 returning *"#;
+        query_as(sql)
+            .bind(id)
+            .bind(dto.name)
+            .bind(dto.phone)
+            .bind(dto.role)
+            .fetch_one(self.db())
+            .await
+        // let groups = self.groups(id).await?;
+        // Ok(UserWithGroups { user, groups })
+    }
+
+    pub async fn is_editable(&self, id: Uuid) -> Result<bool, sqlx::Error> {
+        let sql = "select exists(select 1 from users where id = $1 and editable)";
+        query_scalar(sql).bind(id).fetch_one(self.db()).await
+    }
+
+    pub async fn is_locked(&self, id: Uuid) -> Result<bool, sqlx::Error> {
+        let sql = "select exists(select 1 from users where id = $1 and locked)";
+        query_scalar(sql).bind(id).fetch_one(self.db()).await
     }
 }

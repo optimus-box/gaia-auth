@@ -15,6 +15,15 @@ impl Errors {
         )
     }
 
+    pub fn not_found() -> (StatusCode, Json<Errors>) {
+        (
+            StatusCode::NOT_FOUND,
+            Json(Errors {
+                error: String::from("object not found"),
+            }),
+        )
+    }
+
     pub fn forbidden() -> (StatusCode, Json<Errors>) {
         (
             StatusCode::FORBIDDEN,
@@ -34,7 +43,10 @@ impl Errors {
     }
 
     pub fn sql(err: sqlx::Error) -> (StatusCode, Json<Errors>) {
-        Self::internal(&err.to_string())
+        match err {
+            sqlx::Error::RowNotFound => Self::not_found(),
+            _ => Self::internal(&err.to_string()),
+        }
     }
 
     pub fn argon2(err: argon2::Error) -> (StatusCode, Json<Errors>) {
